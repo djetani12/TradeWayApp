@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tradeway-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tradeway
+      POSTGRES_USER: tradeway
+      POSTGRES_PASSWORD: tradeway
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tradeway -d tradeway"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  reporting-postgres:
+    image: postgres:16-alpine
+    container_name: tradeway-reporting-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tradeway_reporting
+      POSTGRES_USER: tradeway
+      POSTGRES_PASSWORD: tradeway
+    ports:
+      - "5433:5432"
+    volumes:
+      - reporting_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tradeway -d tradeway_reporting"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  reporting_postgres_data:
