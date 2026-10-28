@@ -1,1 +1,4 @@
 /Users/deepjetani/Desktop/TradeWay/apps/backend/src/test/java/com/tradeway/BackendApplicationTests.java
+/Users/deepjetani/Desktop/TradeWay/apps/backend/src/test/java/com/tradeway/controller/EmployeeReportingControllerSecurityTest.java
+/Users/deepjetani/Desktop/TradeWay/apps/backend/src/test/java/com/tradeway/employee/EmployeeReportingServiceTest.java
+/Users/deepjetani/Desktop/TradeWay/apps/backend/src/test/java/com/tradeway/service/TradingServiceIntegrationTest.java

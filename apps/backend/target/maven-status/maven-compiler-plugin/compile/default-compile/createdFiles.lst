@@ -1,3 +1,5 @@
+com/tradeway/controller/HealthController.class
+com/tradeway/outbox/OutboxStatus.class
 com/tradeway/BackendApplication.class
 com/tradeway/config/SecurityConfig.class
-com/tradeway/controller/HealthController.class
+com/tradeway/outbox/OutboxEvent.class

@@ -7,42 +7,50 @@ TradeWay is a simulated stock and bond trading platform for educational use. The
 - Employee frontend: React + TypeScript + Vite
 - Backend: Java 21 + Spring Boot 3.4.2 + Spring Security + Spring Data JPA + Maven
 - Databases: PostgreSQL primary and reporting databases via Docker Compose
-- Tooling: Flyway, OpenAPI/Swagger, JUnit 5, Vitest, Playwright
+- Tooling: Flyway, JUnit 5, and production front-end builds verified on the supported runtime stack
 
 ## Prerequisites
-- Node 22.x
+- Node 22.x (required; Vite 8 / Rolldown fails on Node 20)
 - Java 21
 - Maven 3.10+
 - Docker Desktop or Docker Engine with Compose support
 - Git
 
 ## Local setup
-1. Copy the example environment file:
+1. Use the supported Node version before installing dependencies:
+   ```bash
+   nvm install 22
+   nvm use 22
+   ```
+   If you do not use nvm, you can also run one-off commands with `npx -p node@22`.
+2. Copy the example environment file:
    ```bash
    cp .env.example .env
    ```
-2. Add or adjust the environment values as needed for your local setup.
-3. Start PostgreSQL databases:
+3. Add or adjust the environment values as needed for your local setup.
+4. Start PostgreSQL databases:
    ```bash
    docker compose up -d
    ```
-4. Install frontend dependencies:
+5. Install frontend dependencies:
    ```bash
    cd apps/client-web && npm install
    cd ../employee-web && npm install
    ```
-5. Start the frontend apps:
+6. Start the frontend apps:
    ```bash
    cd apps/client-web && npm run dev -- --host 0.0.0.0
    cd ../employee-web && npm run dev -- --host 0.0.0.0
    ```
-6. Start the backend:
+7. Start the backend:
    ```bash
    cd apps/backend
-   export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+   export JAVA_HOME="$(/usr/libexec/java_home -v 21)"
    export PATH="$JAVA_HOME/bin:$PATH"
    mvn spring-boot:run
    ```
+
+> If the terminal reports a `node:util` export error during `vite build`, the machine is running Node 20 or older. Switch to Node 22 before continuing.
 
 ## Default local ports
 - Customer web: http://localhost:5173
@@ -57,19 +65,30 @@ TradeWay is a simulated stock and bond trading platform for educational use. The
 
 ## Useful commands
 ```bash
-# Build frontend apps
-cd apps/client-web && npm run build
-cd ../employee-web && npm run build
+# Use the supported runtime implicitly with nvm
+nvm use 22
+
+# Build frontend apps with the supported runtime
+cd apps/client-web && npx -p node@22 node ./node_modules/vite/bin/vite.js build
+cd ../employee-web && npx -p node@22 node ./node_modules/vite/bin/vite.js build
 
 # Build backend
-cd apps/backend && export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home && export PATH="$JAVA_HOME/bin:$PATH" && mvn test
-cd apps/backend && export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home && export PATH="$JAVA_HOME/bin:$PATH" && mvn package
+cd apps/backend && export JAVA_HOME="$(/usr/libexec/java_home -v 21)" && export PATH="$JAVA_HOME/bin:$PATH" && mvn test
+cd apps/backend && export JAVA_HOME="$(/usr/libexec/java_home -v 21)" && export PATH="$JAVA_HOME/bin:$PATH" && mvn package
 
 # Reset local DB data
 docker compose down -v
 ```
 
 ## Notes
-- This milestone is intentionally a foundation scaffold. The trading engine, account services, and reporting layer are not yet implemented.
+- The customer trading engine and employee reporting layer are implemented as separate operational surfaces, with employee access restricted to admin/analyst roles.
 - Docker is required for the primary and reporting databases, but it may not be available in every local environment.
 - Market data remains simulated and clearly labeled as educational demo data.
+- Analytics queries and reporting consumers are isolated from the transactional trading database so operational reporting is not performed directly against the live ledger.
+
+## Milestone 5
+- Separate employee portal available on http://localhost:5174.
+- Secure admin and analyst sign-in is available using the seeded admin credentials.
+- Reporting dashboard includes KPI cards, period summaries, status rollups, and platform health information.
+- Reporting uses a dedicated reporting datasource and transactional outbox pattern for synchronization.
+- Administrative actions include account suspension and reactivation for staff members with admin privileges.

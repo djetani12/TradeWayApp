@@ -22,9 +22,16 @@ html, body, #root {
 
 body {
   min-height: 100vh;
+  background: #020817;
 }
 
+button,
 input,
-button {
+select {
   font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }

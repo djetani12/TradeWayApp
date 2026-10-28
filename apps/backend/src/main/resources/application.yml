@@ -9,6 +9,8 @@ spring:
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
     locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
   jpa:
     hibernate:
       ddl-auto: validate
@@ -23,6 +25,13 @@ server:
   servlet:
     session:
       timeout: 10m
+
+reporting:
+  datasource:
+    url: ${REPORTING_DB_URL:jdbc:h2:mem:tradeway_reporting;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${REPORTING_DB_USERNAME:sa}
+    password: ${REPORTING_DB_PASSWORD:}
+    driver-class-name: ${REPORTING_DB_DRIVER:org.h2.Driver}
 
 management:
   endpoints:
